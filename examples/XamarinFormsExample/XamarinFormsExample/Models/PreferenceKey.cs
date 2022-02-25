@@ -2,6 +2,6 @@
 {
     public static class PreferenceKey
     {
-        public static string CurrentUser = "currentUser";
+        public const string CurrentUser = "currentUser";
     }
 }

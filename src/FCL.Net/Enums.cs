@@ -2,7 +2,7 @@
 
 namespace FCL.Net
 {
-    public enum FCLServiceType
+    public enum FclServiceType
     {
         [EnumMember(Value = "authn")]
         Authn,
@@ -41,7 +41,7 @@ namespace FCL.Net
         Declined
     }
 
-    public enum FCLServiceMethod
+    public enum FclServiceMethod
     {
         [EnumMember(Value = "HTTP/POST")]
         HttpPost,
@@ -57,43 +57,6 @@ namespace FCL.Net
 
         [EnumMember(Value = "DATA")]
         Data
-    }
-
-    public enum FclConfigKey
-    {
-        [EnumMember(Value = "accessNode.api")]
-        AccessNode,
-
-        [EnumMember(Value = "app.detail.icon")]
-        Icon,
-
-        [EnumMember(Value = "app.detail.title")]
-        Title,
-
-        [EnumMember(Value = "challenge.handshake")]
-        Handshake,
-
-        [EnumMember(Value = "challenge.scope")]
-        Scope,
-
-        [EnumMember(Value = "discovery.wallet")]
-        Wallet,
-
-        [EnumMember(Value = "service.OpenID.scopes")]
-        OpenIDScope,
-
-        Authn,
-        Env,
-        Location
-    }
-
-    public enum FCLProvider
-    {
-        [EnumMember(Value = "GET")]
-        Get,
-
-        [EnumMember(Value = "POST")]
-        Post
     }
 
     public enum DefaultFclWalletProvider

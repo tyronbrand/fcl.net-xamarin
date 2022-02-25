@@ -23,7 +23,7 @@ namespace FCL.Net.Strategy
             {
                 F_Type = "Service",
                 F_Vsn = "1.0.0",
-                Type = FCLServiceType.Authn,
+                Type = FclServiceType.Authn,
                 Method = "HTTP/POST",
                 Endpoint = _options.AuthnUri
             });

@@ -24,6 +24,27 @@ namespace FCL.Net.Android
 
         public async Task<FclAuthServiceResponse> AuthenticateAsync(AuthenticateParams authenticateParams)
         {
+            ValidateParams(authenticateParams);
+
+            _task = new TaskCompletionSource<FclAuthServiceResponse>();
+            _fclPoller = new FclPoller(authenticateParams, _task);
+
+            ActivityMediator.Instance.ActivityMessageReceived += Callback;
+
+            var fclAuthServiceResponse = await AuthenticateTask(authenticateParams);
+
+            _fclPoller.Stop();
+
+            if (fclAuthServiceResponse.ResultType == ResultType.Success)
+                _context.StartActivity(new Intent(Intent.ActionView, Uri.Parse(authenticateParams.RedirectUri)));
+            
+            ActivityMediator.Instance.ActivityMessageReceived -= Callback;
+
+            return fclAuthServiceResponse;
+        }
+
+        private static void ValidateParams(AuthenticateParams authenticateParams)
+        {
             if (authenticateParams.AuthnResponse == null)
                 throw new ArgumentException("Missing AuthnResponse", nameof(authenticateParams));
 
@@ -41,22 +62,6 @@ namespace FCL.Net.Android
 
             if (authenticateParams.HttpClient == null)
                 throw new ArgumentException("Missing HttpClient", nameof(authenticateParams));
-
-            _task = new TaskCompletionSource<FclAuthServiceResponse>();
-            _fclPoller = new FclPoller(authenticateParams, _task);
-
-            ActivityMediator.Instance.ActivityMessageReceived += Callback;
-
-            var fclAuthServiceResponse = await AuthenticateTask(authenticateParams);
-
-            _fclPoller.Stop();
-
-            if (fclAuthServiceResponse.ResultType == ResultType.Success)
-                _context.StartActivity(new Intent(Intent.ActionView, Uri.Parse(authenticateParams.RedirectUri)));
-            
-            ActivityMediator.Instance.ActivityMessageReceived -= Callback;
-
-            return fclAuthServiceResponse;
         }
 
         private Task<FclAuthServiceResponse> AuthenticateTask(AuthenticateParams authenticateParams)
