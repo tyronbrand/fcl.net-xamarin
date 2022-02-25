@@ -5,8 +5,8 @@ namespace FCL.Net.Models
 {
     public class Service : RequestBase
     {
-        public FCLServiceType Type { get; set; }
-        public FCLServiceMethod Method { get; set; }
+        public FclServiceType Type { get; set; }
+        public FclServiceMethod Method { get; set; }
         public Uri Endpoint { get; set; }
         public string Uid { get; set; }
         public string Id { get; set; }

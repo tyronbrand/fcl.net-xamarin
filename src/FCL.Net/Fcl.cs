@@ -2,12 +2,13 @@
 using FCL.Net.Strategy;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FCL.Net
 {
     public class Fcl
-    {        
+    {
         public FlowUser CurrentUser;
         private readonly HttpPostStrategy _httpPostStrategy;
 
@@ -41,11 +42,13 @@ namespace FCL.Net
         {
             var paramList = new List<string>();
 
-            if (parameters != null && !string.IsNullOrWhiteSpace(location))
+            if (!string.IsNullOrWhiteSpace(location))
                 paramList.Add($"l6n={location}");
-            
-            foreach (var parameter in parameters)
-                paramList.Add($"{parameter.Key}={parameter.Value}");
+
+            if (parameters == null)
+                return $"{uri}?{string.Join("&", paramList)}";
+
+            paramList.AddRange(parameters.Select(parameter => $"{parameter.Key}={parameter.Value}"));
 
             return $"{uri}?{string.Join("&", paramList)}";
         }

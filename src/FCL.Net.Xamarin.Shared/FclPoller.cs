@@ -14,7 +14,7 @@ namespace FCL.Net.Xamarin.Shared
         private readonly double _intervalMs;
         private readonly TaskCompletionSource<FclAuthServiceResponse> _task;
         private bool _disableTimer;
-        private static HttpClient _client;
+        private readonly HttpClient _client;
         private Timer _timer;
 
         public FclPoller(AuthenticateParams authenticateParams, TaskCompletionSource<FclAuthServiceResponse> task)
@@ -26,6 +26,13 @@ namespace FCL.Net.Xamarin.Shared
             _pollUri = Fcl.BuildUrl(authenticateParams.AuthnResponse.Updates.Endpoint, authenticateParams.AuthnResponse.Updates.Params, authenticateParams.Options.Location);
         }
 
+        public void Stop()
+        {
+            _disableTimer = true;
+            _timer.Enabled = false;
+            _timer.Dispose();
+        }
+        
         public void Start()
         {
             _timer = new Timer()
@@ -33,18 +40,16 @@ namespace FCL.Net.Xamarin.Shared
                 AutoReset = true
             };
             _disableTimer = false;
-            _timer.Elapsed += async (sender, e) => await PollAsync(DateTime.UtcNow);
+            _timer.Elapsed += OnTimerOnElapsed;
             _timer.Interval = _intervalMs;
             _timer.Enabled = true;
         }
 
-        public void Stop()
+        private async void OnTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
-            _disableTimer = true;
-            _timer.Enabled = false;
-            _timer.Dispose();
+            await PollAsync(DateTime.UtcNow);
         }
-
+        
         private async Task PollAsync(DateTime startTime)
         {
             try
@@ -63,7 +68,7 @@ namespace FCL.Net.Xamarin.Shared
                 var response = await _client.GetStringAsync(_pollUri);
                 var authnResponse = JsonConvert.DeserializeObject<AuthnResponse>(response);
 
-                if (authnResponse.Status == Status.Approved)
+                if (authnResponse != null && authnResponse.Status == Status.Approved)
                 {
                     _task.SetResult(
                         new FclAuthServiceResponse

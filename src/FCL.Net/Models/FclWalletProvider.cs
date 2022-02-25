@@ -7,7 +7,7 @@ namespace FCL.Net.Models
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public FCLServiceMethod Method { get; set; }
+        public FclServiceMethod Method { get; set; }
         public Uri Endpoint { get; set; }
 
         public static FclWalletProvider GetDefaultWalletProvider(DefaultFclWalletProvider walletProvider)
@@ -19,7 +19,7 @@ namespace FCL.Net.Models
                     {
                         Id = "dapper",
                         Name = "Dapper",
-                        Method = FCLServiceMethod.HttpPost,
+                        Method = FclServiceMethod.HttpPost,
                         Endpoint = new Uri("https://dapper-http-post.vercel.app/api/authn")
                     };
                 case DefaultFclWalletProvider.Blocto:
@@ -27,7 +27,7 @@ namespace FCL.Net.Models
                     {
                         Id = "blocto",
                         Name = "Blocto",
-                        Method = FCLServiceMethod.HttpPost,
+                        Method = FclServiceMethod.HttpPost,
                         Endpoint = new Uri("https://flow-wallet.blocto.app/api/flow/authn")
                     };
                 default:
